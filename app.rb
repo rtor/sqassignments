@@ -6,6 +6,8 @@ require 'rubygems'
 require 'sinatra'
 require 'system_timer'
 require 'benchmark'
+require 'active_record'
+require './models/sqassignments.rb'
 
 class App < Sinatra::Application
 
