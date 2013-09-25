@@ -1,0 +1,19 @@
+%h1= "SearchQuality Assignments"
+%table{:border => '1', :cellspacing => 0, :cellpadding => 2}
+  %tr{:bgcolor => '#aabbff'}
+    %td= "Id"
+    %td= "URL B&uacute;squeda"
+    %td= "Usuario"
+    %td= "Fecha de asignaci&oacute;n"
+    %td= "Fecha de finalizaci&oacute;n"
+    %td= "Estado"
+  - sqassignments.each do |x| 
+    %tr
+      %td
+        %a{:href => "/sqassignments/view/#{x.id}"}= x.id
+      %td
+        %a{:href => x.url_busqueda}= x.url_busqueda
+      %td= x.usuario_id
+      %td= x.t_assigned.strftime("%H:%M:%S %d/%m/%Y")
+      %td= x.t_completed.nil? ? '&nbsp;' : x.t_completed.strftime("%H:%M:%S %d/%m/%Y")
+      %td= sqastatus.select{|s|  s.id == x.status_id.to_i}.first.description

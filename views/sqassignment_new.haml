@@ -1,0 +1,17 @@
+%h1= "Nuevo SearchQuality Assignment"
+%h2= user_email
+%h2= user_codusuario
+%form{:action => 'new', :method => 'post' }
+  %p
+    %label{:for => "url_busqueda"} URL de la b&uacute;squeda:
+    %input{ :type => "text", :name => "url_busqueda", :size => 50 }
+  %p
+    %label{:for => "usuario_id"} Usuario:
+    %input{ :type => "text", :name => "usuario_id", :size => 11, :value => user_codusuario}
+  %p
+    %label{:for => "status_id"} Estado:
+    %select{:name => "status_id"}
+      - sqastatus.each do |s|
+        %option{:value => s.id}= s.description
+  %p
+    %input{ :type => "submit", :name => "submit", :value => "Crear" }
