@@ -1,0 +1,20 @@
+%h1= "SearchQuality Assignment: #{sqassignments.first.id}"
+%form{:action => "/sqassignments/edit/#{sqassignments.first.id}", :method => 'post' }
+  %input{ :type => "hidden", :name => "t_assigned", :value => sqassignments.first.t_assigned }
+  %p
+    %label{:for => "url_busqueda", :style => "font-weight:bold" } URL de la b&uacute;squeda:
+    %input{ :type => "text", :name => "url_busqueda", :size => 50, :value => sqassignments.first.url_busqueda }
+  %p
+    %b= "Usuario: "
+    %span= user_email
+  %p
+    %b= "Fecha de asignaci&oacute;n: "
+    %span= sqassignments.first.t_assigned.strftime("%H:%M:%S %d/%m/%Y")
+    %input{ :type => "hidden", :name => "t_assigned", :value => sqassignments.first.t_assigned }
+  %p
+    %label{:for => "status_id", :style => "font-weight:bold"} Estado:
+    %select{:name => "status_id"}
+      - sqastatus.each do |s|
+        %option{:value => s.id}= s.description
+  %p
+    %input{ :type => "submit", :name => "submit", :value => "Editar" }
