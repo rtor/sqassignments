@@ -81,4 +81,33 @@ class App < Sinatra::Application
     haml :sqassignment_modified, :locals => {:id => params[:id], :b_finalizado => b_finalizado}
   end
 
+  #save a sqreview
+  post '/sqassignments/new_sqreview' do
+    1.upto(10){|i|
+      if params["vid_#{i}"].to_i > 1
+        @sqr = Sqreview.find_by_id(params["sq_review_id_#{i}"])
+        #update review
+        if !@sqr.nil?
+          @sqr.update_attributes(:id => params["sq_review_id#{i}"], :usuario_id => params[:usuario_id], :t_completed => Time.now, :vid => params["vid_#{i}"], :sq_assignment_id => params[:sq_assignment_id], :position => params["position_#{i}"], :review_score_id => params["review_score_id_#{i}"], :user_comment => params["user_comment_#{i}"])
+          @sqr.save
+        #save new review
+        else
+          @sqr = Sqreview.new(:usuario_id => params[:usuario_id], :t_completed => Time.now, :vid => params["vid_#{i}"], :sq_assignment_id => params[:sq_assignment_id], :position => params["position_#{i}"], :review_score_id => params["review_score_id_#{i}"], :user_comment => params["user_comment_#{i}"])
+          @sqr.save
+        end
+      end
+    }
+
+    #did we press the end button?
+    if params[:end_sqreview]
+      #change t_completed date, and assignment status
+      id_fin = get_finished_status_id
+      @sqa = Sqassignments.find_by_id(params[:sq_assignment_id])
+      @sqa.update_attributes(:t_completed => Time.now, :status_id => id_fin)
+      @sqa.save
+    end
+    
+    haml :sqreview_saved, :locals => {:b_finish => @b_finish, :id => params[:sq_assignment_id]}
+  end
+
 end
