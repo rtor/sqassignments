@@ -1,0 +1,8 @@
+%h1= "SearchQuality Review: #{id}"
+- if b_finish
+  %p= "Review terminada."
+- else
+  %p= "Cambios almacenados."
+
+%p
+  %a{:href => '/sqassignments'}>Volver
