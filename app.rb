@@ -49,7 +49,10 @@ class App < Sinatra::Application
   get '/sqassignments/view/:id' do
     @sqa = [Sqassignments.find_by_id(params[:id])]
     @sqas = Sqassignmentstatu.all
-    haml :sqassignments_list, :locals => {:sqassignments => @sqa, :sqastatus => @sqas}
+    @sqarc = Sqreviewclasse.all
+    @sqar = Sqreview.find_by_sql(" SELECT * FROM sqreviews WHERE sq_assignment_id = #{params[:id]}")
+    b_completed = is_completed?(@sqa)
+    haml :sqassignments_list, :locals => {:sqassignments => @sqa, :sqastatus => @sqas, :sqscores => @sqarc, :sqreviews => @sqar, :b_completed => b_completed}
   end
 
   #form to modify the url or status of an assignment
