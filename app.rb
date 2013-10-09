@@ -11,6 +11,17 @@ require './models/sqassignments.rb'
 
 class App < Sinatra::Application
 
+  #get the id of the SQAssignmentStatus "Finished"
+  def get_finished_status_id
+    @sqas = Sqreview.find_by_sql(" SELECT * FROM sqassignmentstatus WHERE description = 'Finalizado' ")
+    @sqas.first.id
+  end
+  
+  #is the assignment completed?
+  def is_completed?(assignment)
+    !assignment.first.t_completed.nil?
+  end
+
   #list all SQ Assignments
   get '/sqassignments' do   
     @sqa = Sqassignments.all
