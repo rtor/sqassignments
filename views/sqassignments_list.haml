@@ -1,4 +1,7 @@
-%h1= "SearchQuality Assignments"
+- if params[:id] 
+  %h1= "SearchQuality Assignment #{params[:id]}"
+- else
+  %h1= "SearchQuality Assignments"
 %table{:border => '1', :cellspacing => 0, :cellpadding => 2}
   %tr{:bgcolor => '#aabbff'}
     %td= "Id"
@@ -17,3 +20,68 @@
       %td= x.t_assigned.strftime("%H:%M:%S %d/%m/%Y")
       %td= x.t_completed.nil? ? '&nbsp;' : x.t_completed.strftime("%H:%M:%S %d/%m/%Y")
       %td= sqastatus.select{|s|  s.id == x.status_id.to_i}.first.description
+
+-#List of first 10 results for this search
+- if params[:id] 
+  %br
+  %form{:action => '/sqassignments/new_sqreview', :method => 'post'} 
+    -#%table{:border => 1, :cellspacing => 0, :cellpadding => 2}
+    %table{:cellpadding => 2, :cellspacing => 1}
+      -#%tr{:bgcolor => '#aabbff'}
+      %tr{:bgcolor => '#aabbff', :border => 1, :cellspacing => 0, :cellpadding => 2}
+        -#%td= "Id" #sqreview id
+        -#user id
+        -#%td= "Fecha de finalizaci&oacute;n"
+        %td= "Vid"
+        -#sqa id
+        %td= "Posici&oacute;n"
+        %td= "Puntuaci&oacute;n"
+        %td= "Comentarios"
+        %td{:bgcolor => 'white', :border => 0, :cellspacing => 0, :cellpadding => 0}= "&nbsp;"
+      - 1.upto(10) do |r|
+        - if r % 2 == 0
+          - bgcolor = '#dddddd'
+        - else
+          - bgcolor = 'white'
+        %tr{:align => 'center', :bgcolor => bgcolor}
+          -#%td= "#{r}" #sqreview id, no visible?
+          - if !sqreviews[r - 1].nil?
+            - sqr_id = sqreviews[r - 1].id
+            %input{:type => "hidden", :name => "sq_review_id_#{r}", :value => sqr_id}
+          -#%td= "#{r}" #fecha finalizacion, no visible?
+          -#reviewer's user id
+          %input{:type => "hidden", :name => "usuario_id", :value => sqassignments.first.usuario_id}
+          -#vid
+          %td
+            - @vid = sqreviews[r - 1].nil? ? "" : sqreviews[r - 1].vid
+            %input{:type => "text", :name => "vid_#{r}", :size => 11, :maxlength => 11, :value => @vid}
+          -#sqassignment id
+          %input{:type => "hidden", :name => "sq_assignment_id", :value => params[:id]}
+          -#position of the document in results
+          %td
+            %input{:type => "text", :name => "position_#{r}", :value => r, :size => 2, :readonly => true}
+          -#menu with scores
+          %td
+            %select{:name => "review_score_id_#{r}"}
+              - sqscores.reverse.each do |s|
+                - b_selected = ""
+                - if !sqreviews[r - 1].nil?
+                  - if sqreviews[r - 1].review_score_id.to_i == s.id.to_i
+                    %option{:value => s.id, :selected => true}= s.description
+                  - else
+                    %option{:value => s.id}= s.description
+                - else
+                  %option{:value => s.id}= s.description
+          -#comments
+          %td
+            - comment = sqreviews[r - 1].nil? ? "" : sqreviews[r - 1].user_comment
+            %textarea{:name => "user_comment_#{r}", :rows => 2, :cols => 100, :maxlength => 250}= comment
+      %tr
+        %td{:colspan => 4, :align => "center"}
+          - if !b_completed
+            %input{:type => "submit", :name => "save_sqreview", :value => "Guardar"}
+            %input{:type => "submit", :name => "end_sqreview", :value => "Finalizar"}
+            %span="&nbsp;"
+            %a{:href => '/sqassignments'}>Volver
+          - else
+            %a{:href => '/sqassignments'}>Volver
