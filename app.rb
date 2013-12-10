@@ -7,6 +7,7 @@ require 'sinatra'
 require 'system_timer'
 require 'benchmark'
 require 'active_record'
+require 'haml'
 require './models/sqassignments.rb'
 
 class App < Sinatra::Application
