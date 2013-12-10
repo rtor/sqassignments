@@ -1,0 +1,54 @@
+EJ_DIR="/mnt/mysql/sqassignments"
+PORT=8000
+PID="/var/run/expertjudgement.pid"
+
+pidof_rackup() {
+	if [ -e "$PID" ]; then
+		if ps -eo pid,args | grep rackup | grep -v grep | awk '{print $1}' | grep $(cat $PID); then
+			return 0
+		fi
+	fi
+	return 1
+}
+
+start() {
+	echo "Starting expert judgement tool"
+	cd "$EJ_DIR"
+	rackup -p $PORT -D -P "$PID"
+}
+
+stop() {
+	echo "Stopping expert judgement tool"
+	kill -9 `cat "$PID"` || echo ...not running
+}
+
+case $1 in
+	start)
+		start
+	;;
+	stop)
+		stop
+	;;
+	reload)
+		stop
+		start
+	;;
+	restart)
+		stop
+		start
+	;;
+	status)
+                PID=$(pidof_rackup) || true
+                if [ -n "$PID" ]; then
+                        echo "ExpertJudgement is running (pid $PID)."
+                        exit 0
+                else
+                        echo "ExpertJudgement is NOT running."
+                        exit 1
+                fi
+        ;;
+	*)
+		echo "Usage: /etc/init.d/expertjudgement {start|stop|restart|reload|status}"
+		exit 1
+        ;;
+esac
