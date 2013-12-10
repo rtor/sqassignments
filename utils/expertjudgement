@@ -1,6 +1,6 @@
 EJ_DIR="/mnt/mysql/sqassignments"
 PORT=8000
-PID="/var/run/expertjudgement.pid"
+PID="/var/run/expertjudgement/expertjudgement.pid"
 
 pidof_rackup() {
 	if [ -e "$PID" ]; then
@@ -13,13 +13,12 @@ pidof_rackup() {
 
 start() {
 	echo "Starting expert judgement tool"
-	cd "$EJ_DIR"
-	rackup -p $PORT -D -P "$PID"
+	cd "$EJ_DIR" && su -c " rackup -p $PORT -D -P \"$PID\" 2> /dev/null " www-data
 }
 
 stop() {
 	echo "Stopping expert judgement tool"
-	kill -9 `cat "$PID"` || echo ...not running
+	kill -9 `cat "$PID"` 2> /dev/null || echo ...not running
 }
 
 case $1 in
