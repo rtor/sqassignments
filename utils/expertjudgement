@@ -13,7 +13,7 @@ pidof_rackup() {
 
 start() {
 	echo "Starting expert judgement tool"
-	cd "$EJ_DIR" && su -c " rackup -p $PORT -D -P \"$PID\" 2> /dev/null " www-data
+	cd "$EJ_DIR" && su -c " rackup -p $PORT -D -P \"$PID\" 2> /dev/null " www-data || su -c " rackup -p $PORT -D -P \"$PID\" " www-data 
 }
 
 stop() {
