@@ -12,6 +12,7 @@
     %label{:for => "status_id"} Estado:
     %select{:name => "status_id"}
       - sqastatus.each do |s|
-        %option{:value => s.id}= s.description
+        - if s.id == 2 #de momento sólo creamos assignments con status = iniciado
+          %option{:value => s.id}= s.description
   %p
     %input{ :type => "submit", :name => "submit", :value => "Crear" }
