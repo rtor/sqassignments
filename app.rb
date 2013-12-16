@@ -9,6 +9,9 @@ require 'benchmark'
 require 'active_record'
 require 'haml'
 require './models/sqassignments.rb'
+require 'will_paginate'
+require 'will_paginate/active_record'
+require 'will_paginate/view_helpers/sinatra'
 
 class App < Sinatra::Application
 
@@ -25,7 +28,7 @@ class App < Sinatra::Application
 
   #list all SQ Assignments
   get '/sqassignments' do   
-    @sqa = Sqassignments.all
+    @sqa = Sqassignments.paginate(:page => params[:page], :per_page => 20)
     @sqas = Sqassignmentstatu.all
     haml :sqassignments_list, :locals => {:sqassignments => @sqa, :sqastatus => @sqas}
   end

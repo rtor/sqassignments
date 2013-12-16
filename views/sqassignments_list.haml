@@ -22,6 +22,8 @@
       %td= x.t_assigned.strftime("%H:%M:%S %d/%m/%Y")
       %td= x.t_completed.nil? ? '&nbsp;' : x.t_completed.strftime("%H:%M:%S %d/%m/%Y")
       %td= sqastatus.select{|s|  s.id == x.status_id.to_i}.first.description
+- if !params[:id]
+  %p= will_paginate sqassignments
 
 -#List of first 10 results for this search
 - if params[:id] 
